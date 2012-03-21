@@ -1,0 +1,92 @@
+p, body {
+	background-color: white;
+	font-family: "MS Sans Serif", Geneva, sans-serif;
+	font-size: small;
+	margin: 0px;
+}
+
+
+a:link, a:visited {
+	color: Navy;
+}
+
+
+a:hover {
+	color: #B22222;
+}
+
+
+fieldset {
+	background-color: #A9A9A9;
+    border: 1px solid black;
+	margin: 10px auto;
+	padding: 10px;
+	width: 700px;
+}
+
+
+label {
+	font-weight: bold;
+}
+
+
+legend {
+    background-color: #B22222;
+	border: 1px solid black;
+	color: InfoBackground;
+	font-variant: small-caps;
+	font-weight: bold;
+	padding: 2px 6px;
+}
+
+
+input, select {
+    background-color: #F5DEB3;
+	border: 1px solid #B22222;
+}
+
+
+table {
+	border: 0px;
+	border-collapse: collapse;
+	font-size: small;
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+}
+
+
+#submitBtn {
+    background-color: green;
+	border: 1px solid black;
+	color: Infobackground;
+	font-variant: small-caps;
+	font-weight: bold;
+	text-align: center;
+}
+
+
+#center {
+	font-size: x-small;
+    margin: 0px auto;
+	text-align: center;
+}
+
+
+#footer {
+	background-color: #333333;
+	color: #FFFFFF;
+	font-size: x-small;
+	bottom: 0px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	position: absolute;
+	text-indent: 10px;
+	width: 100%;
+}
+
+
+#footer a {
+	color: #C6D5FD;
+	text-decoration: none;
+}

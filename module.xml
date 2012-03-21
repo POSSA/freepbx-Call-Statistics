@@ -1,0 +1,18 @@
+<module>
+	<rawname>callstatistics</rawname>
+	<name>Call Statistics</name>
+	<version>0.0.1b1</version>
+	<changelog>
+		*0.0.1b1
+				Initial release of the module which contains the original module, Concurrent Calls v2.1.1
+				as well as the previously unreleased "Extensions Breakdown" module.
+	</changelog>
+	<type>tool</type>
+	<category>Reports</category>
+	<description>Graphs concurrent calls as well as calls made by extensions over a specified period of time.</description>
+	<menuitems>
+		<concurrentcalls>Concurrent Calls</concurrentcalls>
+		<extbreakdown>Extensions Breakdown</extbreakdown>
+	</menuitems>
+	<location>http://github.com/boolah/Call-Statistics</location>
+</module>
