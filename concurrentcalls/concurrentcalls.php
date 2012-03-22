@@ -23,6 +23,7 @@
 	session_start();
 
 	// Read in default configuration
+	require("../include.php");
 	if ( !isset($_POST["Update"]) ) {
 		$concurrentcalls_settings = parse_ini_file("concurrentcalls.conf");
 	}
@@ -571,7 +572,7 @@
 		echo("</p>");
 	?>
 	<p id="footer">
-		<a href="http://github.com/boolah/Call-Statistics/">Call Statistics</a> v0.0.1 BETA RELEASE
+		<a href="http://github.com/boolah/Call-Statistics/">Call Statistics</a> <?php echo ($version_name); ?>
 	</p>
 </body>
 
