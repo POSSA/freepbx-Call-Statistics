@@ -1,9 +1,11 @@
 <module>
 	<rawname>callstatistics</rawname>
 	<name>Call Statistics</name>
-	<version>0.0.1b1</version>
+	<version>0.0.1b2</version>
 	<changelog>
-		*0.0.1b1
+		*0.0.1b2*
+				Fixed a bug in how calls to/from extension were counted in the Extensions Breakdown module.
+		*0.0.1b1*
 				Initial release of the module which contains the original module, Concurrent Calls v2.1.1
 				as well as the previously unreleased "Extensions Breakdown" module.
 	</changelog>

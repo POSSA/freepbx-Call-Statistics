@@ -23,6 +23,7 @@
 	session_start();
 
 	// Read in default configuration
+	require("../include.php");
 	if ( !isset($_POST["Update"]) ) {
 		$extbreakdown_settings = parse_ini_file("extbreakdown.conf");
 	}
@@ -167,7 +168,7 @@
 		or die("Failed to select database: " . $dbConf["database"]);
 
 	$SQLCalls = "SELECT
-						IF(LENGTH(dst) = " . strlen($extbreakdown_settings['ext']) . ", dst + 0, SUBSTRING(channel, " . (strlen($extbreakdown_settings['ext']) + 1) . ", " . strlen($extbreakdown_settings['ext']) . ") + 0) AS Extension,
+						IF(LENGTH(dst) = " . strlen($extbreakdown_settings['ext']) . ", dst + 0, SUBSTRING(SUBSTRING_INDEX(channel, '/', -1), 1, " . strlen($extbreakdown_settings['ext']) . ") + 0) AS Extension,
 						COUNT(calldate) AS Calls,
 						SUM(duration) AS Seconds
 					FROM
@@ -375,7 +376,7 @@
 ?>
 
 	<p id="footer">
-		<a href="http://github.com/boolah/Call-Statistics/">Call Statistics</a> v0.0.1 BETA RELEASE
+		<a href="http://github.com/boolah/Call-Statistics/">Call Statistics</a> <?php echo ($version_name); ?>
 	</p>
 </body>
 
