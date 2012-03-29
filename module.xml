@@ -1,8 +1,10 @@
 <module>
 	<rawname>callstatistics</rawname>
 	<name>Call Statistics</name>
-	<version>0.0.1b2</version>
+	<version>0.0.1b3</version>
 	<changelog>
+		*0.0.1b3*
+				Allow for the input of case-insenstive extension masks in Extensions Breakdown.
 		*0.0.1b2*
 				Fixed a bug in how calls to/from extension were counted in the Extensions Breakdown module.
 		*0.0.1b1*

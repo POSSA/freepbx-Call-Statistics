@@ -12,8 +12,8 @@
 	// GNU General Public License for more details.
 	//
 	// Module Name:		Extension Breakdown
-	// Version:			1.0.0
-	// Date:			2012-03-21
+	// Version:			1.0.1
+	// Date:			2012-03-29
 	// Homepage:		http://github.com/boolah/Call-Statistics/
 	// Download:		http://github.com/boolah/Call-Statistics/
 	//
@@ -224,8 +224,10 @@
 
 	<script language="JavaScript" type="text/javascript">
 		function formSubmit(myform) {
+			// Convert lower-case 'x' to upper-case 'X'
+			var cleanedNumber = myform.ext.value.replace(/[x]/g,'X');
 			// Remove any non-numeric values from the extension number, except for the wildcard character, 'X'
-			var cleanedNumber = myform.ext.value.replace(/[^\d,X]/g,'');
+			cleanedNumber = cleanedNumber.replace(/[^\d,X]/g,'');
 			myform.ext.value = cleanedNumber;
 		}
 
