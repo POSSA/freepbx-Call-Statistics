@@ -5,6 +5,7 @@
 	<changelog>
 		*0.0.1b3*
 				Allow for the input of case-insenstive extension masks in Extensions Breakdown.
+				Added PHP gd extensions as dependency
 		*0.0.1b2*
 				Fixed a bug in how calls to/from extension were counted in the Extensions Breakdown module.
 		*0.0.1b1*
@@ -19,4 +20,7 @@
 		<extbreakdown>Extensions Breakdown</extbreakdown>
 	</menuitems>
 	<location>http://github.com/boolah/Call-Statistics</location>
+	<depends>
+		<phpcomponent>gd</phpcomponent>
+	</depends>	
 </module>
