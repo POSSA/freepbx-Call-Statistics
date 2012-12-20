@@ -1,8 +1,9 @@
 <module>
 	<rawname>callstatistics</rawname>
 	<name>Call Statistics</name>
-	<version>0.0.1b3</version>
+	<version>0.0.2</version>
 	<changelog>
+		*0.0.2* Released as POSSA module with minor improvements
 		*0.0.1b3*
 				Allow for the input of case-insenstive extension masks in Extensions Breakdown.
 				Added PHP gd extensions as dependency
@@ -14,12 +15,12 @@
 	</changelog>
 	<type>tool</type>
 	<category>Reports</category>
-	<description>Graphs concurrent calls as well as calls made by extensions over a specified period of time.</description>
+	<description>Graphs concurrent calls as well as calls made by extensions over a user specified period of time.</description>
 	<menuitems>
 		<concurrentcalls>Concurrent Calls</concurrentcalls>
 		<extbreakdown>Extensions Breakdown</extbreakdown>
 	</menuitems>
-	<location>http://github.com/boolah/Call-Statistics</location>
+	<location>https://github.com/POSSA/freepbx-Call-Statistics</location>
 	<depends>
 		<phpcomponent>gd</phpcomponent>
 	</depends>	
