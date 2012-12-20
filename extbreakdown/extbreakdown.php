@@ -12,10 +12,9 @@
 	// GNU General Public License for more details.
 	//
 	// Module Name:		Extension Breakdown
-	// Version:			1.0.0
-	// Date:			2012-03-21
-	// Homepage:		http://github.com/boolah/Call-Statistics/
-	// Download:		http://github.com/boolah/Call-Statistics/
+	// Version:			1.0.1
+	// Date:			2012-03-29
+	// Homepage:		https://github.com/POSSA/freepbx-Call-Statistics
 	//
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -23,7 +22,6 @@
 	session_start();
 
 	// Read in default configuration
-	require("../include.php");
 	if ( !isset($_POST["Update"]) ) {
 		$extbreakdown_settings = parse_ini_file("extbreakdown.conf");
 	}
@@ -224,8 +222,10 @@
 
 	<script language="JavaScript" type="text/javascript">
 		function formSubmit(myform) {
+			// Convert lower-case 'x' to upper-case 'X'
+			var cleanedNumber = myform.ext.value.replace(/[x]/g,'X');
 			// Remove any non-numeric values from the extension number, except for the wildcard character, 'X'
-			var cleanedNumber = myform.ext.value.replace(/[^\d,X]/g,'');
+			cleanedNumber = cleanedNumber.replace(/[^\d,X]/g,'');
 			myform.ext.value = cleanedNumber;
 		}
 
@@ -376,7 +376,7 @@
 ?>
 
 	<p id="footer">
-		<a href="http://github.com/boolah/Call-Statistics/">Call Statistics</a> <?php echo ($version_name); ?>
+		<a href="https://github.com/POSSA/freepbx-Call-Statistics">Call Statistics</a> <?php echo ($version_name); ?>
 	</p>
 </body>
 

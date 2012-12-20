@@ -14,8 +14,7 @@
 	// Module Name:		Concurrent Calls
 	// Version:			2.1.1
 	// Date:			2012-03-07
-	// Homepage:		http://github.com/boolah/Call-Statistics/
-	// Download:		http://github.com/boolah/Call-Statistics/
+	// Homepage:		https://github.com/POSSA/freepbx-Call-Statistics
 	//
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -23,7 +22,6 @@
 	session_start();
 
 	// Read in default configuration
-	require("../include.php");
 	if ( !isset($_POST["Update"]) ) {
 		$concurrentcalls_settings = parse_ini_file("concurrentcalls.conf");
 	}
@@ -572,7 +570,7 @@
 		echo("</p>");
 	?>
 	<p id="footer">
-		<a href="http://github.com/boolah/Call-Statistics/">Call Statistics</a> <?php echo ($version_name); ?>
+		<a href="https://github.com/POSSA/freepbx-Call-Statistics">Call Statistics</a> <?php echo ($version_name); ?>
 	</p>
 </body>
 
