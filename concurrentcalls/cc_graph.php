@@ -1,7 +1,4 @@
 <?php
-	// Initialize the session.  This is needed to build the graphs
-	session_start();
-
 	// Retrieve variables passed from the main script
 	$graph_type = $_GET["graph"];
 	$graph_width = $_GET["width"];
@@ -10,7 +7,7 @@
 	$maxLoad = (is_numeric($_GET["maxLoad"]) ? $_GET["maxLoad"] : 0);
 
 	// Include the main graphing module
-	include_once("../jpgraph_lib/jpgraph.php");
+	include_once(dirname(dirname(__FILE__))."/jpgraph_lib/jpgraph.php");
 
 	// Function to convert a timestamp (in epoch seconds) to universal time (yyyy-mm-dd hh:mm:ss)
 	function date_conv($t_stamp) {
@@ -55,8 +52,8 @@
 
 	if ($graph_type == "concurrentcalls") {
 		// We need to include the graphing modules for bar and line graphs
-		include_once("../jpgraph_lib/jpgraph_bar.php");
-		include_once("../jpgraph_lib/jpgraph_line.php");
+		include_once(dirname(dirname(__FILE__))."/jpgraph_lib/jpgraph_bar.php");
+		include_once(dirname(dirname(__FILE__))."/jpgraph_lib/jpgraph_line.php");
 
 		// Get the session variables (array) passed from the main script
 		$load_distribution = $_SESSION["l_distribution"];
@@ -161,7 +158,7 @@
 		$graph->Stroke();
 	} elseif ($graph_type == "cc_over_time") {
 		// We need to include the graphing modules for line graphs
-		include_once("../jpgraph_lib/jpgraph_line.php");
+		include_once(dirname(dirname(__FILE__))."/jpgraph_lib/jpgraph_line.php");
 
 		// Get the session variables (array) passed from the main script
 		$time_distribution = $_SESSION["t_distribution"];
@@ -229,7 +226,7 @@
 		$graph->Stroke();
 	} elseif ($graph_type == "cc_breakdown") {
 		// We need to include the graphing modules for bar and line graphs
-		include_once("../jpgraph_lib/jpgraph_pie.php");
+		include_once(dirname(dirname(__FILE__))."/jpgraph_lib/jpgraph_pie.php");
 
 		// Get the session variables (array) passed from the main script
 		$load_distribution = $_SESSION["l_distribution"];

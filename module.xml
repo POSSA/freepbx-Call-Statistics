@@ -1,8 +1,9 @@
 <module>
 	<rawname>callstatistics</rawname>
 	<name>Call Statistics</name>
-	<version>0.0.2</version>
+	<version>0.1.0</version>
 	<changelog>
+		*0.1.0* Proper Module Format
 		*0.0.2* Released as POSSA module with minor improvements
 		*0.0.1b3*
 				Allow for the input of case-insenstive extension masks in Extensions Breakdown.
@@ -23,5 +24,5 @@
 	<location>https://github.com/POSSA/freepbx-Call-Statistics</location>
 	<depends>
 		<phpcomponent>gd</phpcomponent>
-	</depends>	
+	</depends>
 </module>
