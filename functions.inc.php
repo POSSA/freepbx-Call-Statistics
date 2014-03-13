@@ -13,6 +13,35 @@ function callstatistics_vercheck() {
 	return ($newver);
 }
 
+/*  The group2chan function receives a DAHDI group number and returns an array of DAHDI channels in the group
+ *  The output from the Asterisk command "dahdi show channels group <integer>" is parsed. Tested on Asterisk 1.8
+ *  and Asterisk 11.
+ */
+function callstatistics_group2chan($groupid) {
+	global $astman;
+
+	// strip non-digits and assume the remaining number is the group number
+	$groupid = preg_replace("/[^0-9]*/", "", $groupid); 
+
+	// use phpagi class to query channels in dahdi group
+	$data = $astman->command("dahdi show channels group $groupid");
+
+//	$channels = array();
+	foreach(explode("\n", $data['data']) as $line) {
+		// catch the leading digits of each line and ignore the rest of the line
+		preg_match("~^.*?(\d+?) .*~",$line,$foo);
+		if (trim($foo[1]) != "") {
+			$channels[] = trim($foo[1]);
+		}
+	}
+	if (isset($channels)) {
+		return $channels;
+	}
+	else {
+		return false;
+	}
+}
+
 
 //Parse XML file into an array
 function callstatistics_xml2array($url, $get_attributes = 1, $priority = 'tag')  {

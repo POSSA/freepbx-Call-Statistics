@@ -107,32 +107,123 @@
 	mysql_select_db($dbConf["database"], $link)
 		or die("Failed to select database: " . $dbConf["database"]);
 
+	// query to get all SIP trunks
 	$SQLTrunks = "SELECT
-						value
-					FROM
-						globals
-					WHERE
-						variable LIKE 'OUT\_%' AND
-						(
-							value LIKE 'SIP\/%' OR
-							value LIKE 'IAX2\/%' OR
-                                                        value LIKE 'DAHDI\/%' OR
-							value LIKE 'ZAP\/%'
-						)
-					ORDER BY
-						value";
+					`name`,`channelid`
+				FROM
+					trunks
+				WHERE
+					disabled LIKE 'off' AND
+					(
+						tech LIKE 'sip'
+					)
+				ORDER BY
+					trunkid";
 	$SQLTrunksRS = mysql_query($SQLTrunks)
 		or die("Failed to query the \"" . $dbConf["database"] . "\" database.");
 
 	// Populate the $trunks array
-	$trunks[0] = "";
+	$trunks[0] = "";  // first entry is blank
+
+	// Add SIP trunks to $trunks array
 	while ($data = mysql_fetch_array($SQLTrunksRS)) {
-		$trunks[] = $data["value"];
+		$trunks[] = array(
+			'channelid' => "SIP/".$data["channelid"]."-",
+			'name' => $data["name"]." (sip)",
+		);
 	}
-	$trunks[] = "IAX2/";
-	$trunks[] = "SIP/";
-    $trunks[] = "DAHDI/";
-	$trunks[] = "ZAP/";
+	// query to get all IAX2 trunks
+	$SQLTrunks = "SELECT
+					`name`,`channelid`
+				FROM
+					trunks
+				WHERE
+					disabled LIKE 'off' AND
+					(
+						tech LIKE 'iax'
+					)
+				ORDER BY
+					trunkid";
+	$SQLTrunksRS = mysql_query($SQLTrunks)
+		or die("Failed to query the \"" . $dbConf["database"] . "\" database.");
+
+	// Add IAX2 trunks to $trunks array
+	while ($data = mysql_fetch_array($SQLTrunksRS)) {
+		$trunks[] = array(
+			'channelid' => "IAX2/".$data["channelid"]."-",
+			'name' => $data["name"]." (iax)",
+		);
+	}
+	// query to get all DAHDI trunks 
+	$SQLTrunks = "SELECT
+					`name`,`channelid`
+				FROM
+					`trunks`
+				WHERE
+					`disabled` LIKE 'off' AND
+					
+					tech LIKE 'dahdi'
+					
+				ORDER BY
+					trunkid";
+	$SQLTrunksRS = mysql_query($SQLTrunks)
+		or die("Failed to query the \"" . $dbConf["database"] . "\" database.");
+
+	// Add DAHDI trunks to $trunks array
+	while ($data = mysql_fetch_array($SQLTrunksRS)) {
+		$trunks[] = array(
+			'channelid' => $data["channelid"],   // treat this one differently until we find out if channel or group
+			'name' => $data["name"]." (dahdi)",
+			'dahdi' => true,
+		);
+	}
+	
+	// Add menu selections for trunk technologies
+	$trunks[] = array(
+			'channelid' => "IAX2/",
+			'name' => "All IAX2 Trunks",
+		);
+
+	$trunks[] = array(
+			'channelid' => "SIP/",
+			'name' => "All SIP Trunks",
+		);
+
+	$trunks[] = array(
+			'channelid' => "DAHDI/",
+			'name' => "All DAHDI Trunks",
+		);
+	// support for ZAP removed 2014-01-25
+	//	$trunks[] = "ZAP/";
+
+	// can not query cdr for DAHDI groups directly, only DAHDI channels. If DAHDI $channelid is all numeric, it's a channel
+	// if DAHDI $channelid has non-numeric chars, it is a group so query asterisk for all channels in the group and build 
+	// regex that will match all channels
+	if ($trunks[$trunk]['dahdi'] == true) {
+		if (is_numeric($trunks[$trunk]['channelid'])) {
+			$trunks[$trunk]['channelid'] = "DAHDI/".$trunks[$trunk]['channelid']."-";
+		}
+		else {
+			// channel ID id has non-numeric chars, it is a DAHDI group, build regex to match all channels in group
+			$chans = callstatistics_group2chan($trunks[$trunk]['channelid']);
+			$trunks[$trunk]['channelid'] = "^DAHDI/[";
+			foreach ($chans as $chan) {
+				$trunks[$trunk]['channelid'] .= "$chan|";
+			}
+			$trunks[$trunk]['channelid'] .= "]-";
+			$dahdi_group = true;
+		}
+	}
+
+	// build channel search query, regexp for dahdi groups, all other channels get search by like
+	if ($dahdi_group) {
+		// note that $trunks is not escaped for MySQL regex, preg_quote seemed to break REGEXP search, not sure how to escape a mysql regexp
+		$channel_search = "channel REGEXP '" . $trunks[$trunk]['channelid'] . "' OR dstchannel REGEXP '" . $trunks[$trunk]['channelid']."' ";
+	} 
+	else {
+		$channel_search = "channel LIKE '" . $trunks[$trunk]['channelid'] . "%' OR dstchannel LIKE '" . $trunks[$trunk]['channelid'] . "%'";
+	}
+
 
 	// Write out the default configuration
 	if ( isset($_POST["Update"]) ) {
@@ -175,8 +266,7 @@
 						LENGTH(dst) >= " . $concurrentcalls_settings["min_num_length"] . "
 					) AND
 					(
-						channel LIKE '" . $trunks[$trunk] . "%' OR
-						dstchannel LIKE '" . $trunks[$trunk] . "%'
+					   ".$channel_search."
 					)";
 					if (isset($number)) {
 						$SQLCalls .= " AND
@@ -366,9 +456,9 @@
 						<?php
 							for ($i = 0; $i < sizeof($trunks); $i++) {
 								if ($trunk == $i) {
-									echo("<option value='" . $i . "' selected>" . $trunks[$i] . "</option>");
+									echo("<option value='" . $i . "' selected>" . $trunks[$i]['name'] . "</option>");
 								} else {
-									echo("<option value='" . $i . "'>" . $trunks[$i] . "</option>");
+									echo("<option value='" . $i . "'>" . $trunks[$i]['name'] . "</option>");
 								}
 							}
 						?>
