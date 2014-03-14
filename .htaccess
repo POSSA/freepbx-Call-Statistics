@@ -1,0 +1,11 @@
+# Disallow all file access first
+#
+<FilesMatch "\..*$">
+        Deny from all
+</FilesMatch>
+
+# Now allow concurrentcalls.php, cc_graph.php, extbreakdown.php, ext_graph.php as well as the various assets
+#
+<FilesMatch "(^$|index\.php|concurrentcalls\.php|cc_graph\.php|extbreakdown\.php|ext_graph\.php|\.(gif|GIF|jpg|jpeg|png|css|js)$)">
+        Allow from all
+</FilesMatch>
