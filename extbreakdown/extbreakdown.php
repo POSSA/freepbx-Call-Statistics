@@ -215,7 +215,7 @@
 
 <body>
 
-<form name="frm_calls" method="POST" action="<?php echo($_SERVER["PHP_SELF"]); ?>">
+<form name="frm_calls" method="POST" ">
 	<fieldset>
 		<!--[if !IE]>-->
 			<legend>Breakdown of Calls by Extension</legend>
@@ -237,7 +237,7 @@
 					<label>Start Date:</label>
 				</td>
 				<td>
-					<script>DateInput('startDate', true, 'YYYY-MM-DD', '<?php echo($startDate); ?>')</script>
+					<input type="text" name="startDate" size="20" maxlength="19" value="<?php echo($startDate); ?>" />
 				</td>
 				<td>
 					<label>External # Length:</label>
@@ -277,7 +277,7 @@
 					<label>End Date:</label>
 				</td>
 				<td>
-					<script>DateInput('endDate', true, 'YYYY-MM-DD', '<?php echo($endDate); ?>')</script>
+					<input type="text" name="endDate" size="20" maxlength="19" value="<?php echo($endDate); ?>" />
 				</td>
 				<td>
 					<label>Extension Format:</label>

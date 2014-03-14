@@ -427,7 +427,8 @@
 </head>
 
 <body>
-	<form name="frm_concurrentcalls" method="POST" action="<?php echo($_SERVER["PHP_SELF"]); ?>">
+<form name="frm_concurrentcalls" method="post" >
+
 		<fieldset>
 			<!--[if !IE]>-->
 				<legend>Parameters</legend>
