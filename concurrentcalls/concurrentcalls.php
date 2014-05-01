@@ -18,64 +18,17 @@
 	//
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 
-	// Initialize the session.  This is needed to build the graphs
-	session_start();
-
 	// Read in default configuration
 	if ( !isset($_POST["Update"]) ) {
 		$concurrentcalls_settings = parse_ini_file("concurrentcalls.conf");
 	}
 
-	// Retrieve variables from FreePBX in order to connect to the MySQL database
-	if(file_exists("/etc/freepbx.conf")) {
-        	//This is FreePBX 2.9+
-		require("/etc/freepbx.conf");
-
-	    $dbConf["host"]		=	$amp_conf['AMPDBHOST'];
-		$dbConf["user"]		=	$amp_conf['AMPDBUSER'];
-		$dbConf["pass"]		=	$amp_conf['AMPDBPASS'];
-		$dbConf["database"]	=	$amp_conf['AMPDBNAME'];
-		$dbConf["engine"]	=	$amp_conf['AMPDBENGINE'];
-		$dbConf["cdrdbase"]	=	"asteriskcdrdb";
-	} elseif(file_exists("/etc/asterisk/freepbx.conf")) {
-		//This is FreePBX 2.9+
-		require("/etc/asterisk/freepbx.conf");
-
-	    $dbConf["host"]		=	$amp_conf['AMPDBHOST'];
-		$dbConf["user"]		=	$amp_conf['AMPDBUSER'];
-		$dbConf["pass"]		=	$amp_conf['AMPDBPASS'];
-		$dbConf["database"]	=	$amp_conf['AMPDBNAME'];
-		$dbConf["engine"]	=	$amp_conf['AMPDBENGINE'];
-		$dbConf["cdrdbase"]	=	"asteriskcdrdb";
-	} else {
-		//This is FreePBX < 2.9
-		require_once "DB.php";
-		define("AMP_CONF", "/etc/amportal.conf");
-
-		// Parse the amportal.conf configuration file
-		function parse_amportal_conf($filename) {
-		$file = file($filename);
-		foreach ($file as $line) {
-	   		if (preg_match("/^\s*([a-zA-Z0-9_]+)\s*=\s*(.*)\s*([;#].*)?/",$line,$matches)) {
-	   	   		$conf[ $matches[1] ] = $matches[2];
-	   		}
-		}
-		return $conf;
-		}
-
-		$amp_conf = parse_amportal_conf(AMP_CONF);
-		if (count($amp_conf) == 0) {
-			fatal("FAILED");
-		}
-
-		// Database config
-		$dbConf["host"]		=	(isset($amp_conf["AMPDBHOST"]) ? $amp_conf["AMPDBHOST"] : "localhost");
-		$dbConf["user"]		=	(isset($amp_conf["AMPDBUSER"]) ? $amp_conf["AMPDBUSER"] : "asteriskuser");
-		$dbConf["pass"]		=	(isset($amp_conf["AMPDBPASS"]) ? $amp_conf["AMPDBPASS"] : "amp109");
-		$dbConf["database"]	=	(isset($amp_conf["AMPENGINE"]) ? $amp_conf["AMPENGINE"] : "asterisk");
-		$dbConf["engine"]	=	(isset($amp_conf["AMPDBENGINE"]) ? $amp_conf["AMPDBENGINE"] : "");
-		$dbConf["cdrdbase"]	=	"asteriskcdrdb";
-	}
+	$dbConf["host"]		=	$amp_conf['AMPDBHOST'];
+	$dbConf["user"]		=	$amp_conf['AMPDBUSER'];
+	$dbConf["pass"]		=	$amp_conf['AMPDBPASS'];
+	$dbConf["database"]	=	$amp_conf['AMPDBNAME'];
+	$dbConf["engine"]	=	$amp_conf['AMPDBENGINE'];
+	$dbConf["cdrdbase"]	=	"asteriskcdrdb";
 
 	// If the database engine is anything other than MySQL, bail out.
 	if ($dbConf["engine"] <> "mysql") {
@@ -474,7 +427,8 @@
 </head>
 
 <body>
-	<form name="frm_concurrentcalls" method="POST" action="<?php echo($_SERVER["PHP_SELF"]); ?>">
+<form name="frm_concurrentcalls" method="post" >
+
 		<fieldset>
 			<!--[if !IE]>-->
 				<legend>Parameters</legend>
@@ -656,7 +610,7 @@
 
 		// Create the requested graph
 		echo("<p id='center'>");
-			echo("<img src='cc_graph.php?graph=" . $concurrentcalls_settings["graph_type"] . "&startDate=" . $startDate . "&endDate=" . $endDate . "&maxLoad=" . $maxLoad . "&width=" . $concurrentcalls_settings["graph_width"] . "' />");
+			echo("<img src='?display=concurrentcalls&quietmode=1&ccgraph=1&graph=" . $concurrentcalls_settings["graph_type"] . "&startDate=" . $startDate . "&endDate=" . $endDate . "&maxLoad=" . $maxLoad . "&width=" . $concurrentcalls_settings["graph_width"] . "' />");
 		echo("</p>");
 	?>
 	<p id="footer">

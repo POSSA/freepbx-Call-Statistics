@@ -1,14 +1,11 @@
 <?php
-	// Initialize the session.  This is needed to build the graphs
-	session_start();
-
 	// Retrieve variables passed from the main script
 	$startDate = $_GET["startDate"];
 	$endDate = $_GET["endDate"];
 	$graph_width = $_GET["width"];
 
 	// Include the main graphing module
-	include_once("../jpgraph_lib/jpgraph.php");
+	include_once(dirname(dirname(__FILE__))."/jpgraph_lib/jpgraph.php");
 
 	// Function to convert a timestamp (in epoch seconds) to universal time (yyyy-mm-dd hh:mm:ss)
 	function date_conv($t_stamp) {
@@ -52,8 +49,8 @@
 	}
 
 		// We need to include the graphing modules for bar and line graphs
-		include_once("../jpgraph_lib/jpgraph_bar.php");
-		include_once("../jpgraph_lib/jpgraph_line.php");
+		include_once(dirname(dirname(__FILE__))."/jpgraph_lib/jpgraph_bar.php");
+		include_once(dirname(dirname(__FILE__))."/jpgraph_lib/jpgraph_line.php");
 
 		// Get the session variables (array) passed from the main script
 		$time_distribution = $_SESSION["t_distribution"];

@@ -18,9 +18,6 @@
 	//
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 
-	// Initialize the session.  This is needed to build the graphs
-	session_start();
-
 	// Read in default configuration
 	if ( !isset($_POST["Update"]) ) {
 		$extbreakdown_settings = parse_ini_file("extbreakdown.conf");
@@ -62,56 +59,12 @@
 		return $hms;
 	}
 
-	// Retrieve variables from FreePBX in order to connect to the MySQL database
-	if(file_exists("/etc/freepbx.conf")) {
-        	//This is FreePBX 2.9+
-		require("/etc/freepbx.conf");
-
-	    $dbConf["host"]		=	$amp_conf['AMPDBHOST'];
-		$dbConf["user"]		=	$amp_conf['AMPDBUSER'];
-		$dbConf["pass"]		=	$amp_conf['AMPDBPASS'];
-		$dbConf["database"]	=	$amp_conf['AMPDBNAME'];
-		$dbConf["engine"]	=	$amp_conf['AMPDBENGINE'];
-		$dbConf["cdrdbase"]	=	"asteriskcdrdb";
-	} elseif(file_exists("/etc/asterisk/freepbx.conf")) {
-		//This is FreePBX 2.9+
-		require("/etc/asterisk/freepbx.conf");
-
-	    $dbConf["host"]		=	$amp_conf['AMPDBHOST'];
-		$dbConf["user"]		=	$amp_conf['AMPDBUSER'];
-		$dbConf["pass"]		=	$amp_conf['AMPDBPASS'];
-		$dbConf["database"]	=	$amp_conf['AMPDBNAME'];
-		$dbConf["engine"]	=	$amp_conf['AMPDBENGINE'];
-		$dbConf["cdrdbase"]	=	"asteriskcdrdb";
-	} else {
-		//This is FreePBX < 2.9
-		require_once "DB.php";
-		define("AMP_CONF", "/etc/amportal.conf");
-
-		// Parse the amportal.conf configuration file
-		function parse_amportal_conf($filename) {
-			$file = file($filename);
-			foreach ($file as $line) {
-	   			if (preg_match("/^\s*([a-zA-Z0-9_]+)\s*=\s*(.*)\s*([;#].*)?/",$line,$matches)) {
-	   	   			$conf[ $matches[1] ] = $matches[2];
-	   			}
-			}
-			return $conf;
-		}
-
-	    $amp_conf = parse_amportal_conf(AMP_CONF);
-		if (count($amp_conf) == 0) {
-			fatal("FAILED");
-		}
-
-		// Database config
-		$dbConf["host"]		=	(isset($amp_conf["AMPDBHOST"]) ? $amp_conf["AMPDBHOST"] : "localhost");
-		$dbConf["user"]		=	(isset($amp_conf["AMPDBUSER"]) ? $amp_conf["AMPDBUSER"] : "asteriskuser");
-		$dbConf["pass"]		=	(isset($amp_conf["AMPDBPASS"]) ? $amp_conf["AMPDBPASS"] : "amp109");
-		$dbConf["database"]	=	(isset($amp_conf["AMPENGINE"]) ? $amp_conf["AMPENGINE"] : "asterisk");
-		$dbConf["engine"]	=	(isset($amp_conf["AMPDBENGINE"]) ? $amp_conf["AMPDBENGINE"] : "");
-		$dbConf["cdrdbase"]	=	"asteriskcdrdb";
-	}
+	$dbConf["host"]		=	$amp_conf['AMPDBHOST'];
+	$dbConf["user"]		=	$amp_conf['AMPDBUSER'];
+	$dbConf["pass"]		=	$amp_conf['AMPDBPASS'];
+	$dbConf["database"]	=	$amp_conf['AMPDBNAME'];
+	$dbConf["engine"]	=	$amp_conf['AMPDBENGINE'];
+	$dbConf["cdrdbase"]	=	"asteriskcdrdb";
 
 	// If the database engine is anything other than MySQL, bail out.
 	if ($dbConf["engine"] <> "mysql") {
@@ -207,19 +160,6 @@
 	// Close the link to MySQL
 	mysql_close($link);
 ?>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-
-<head>
-	<title>Extension Breakdown</title>
-
-	<link href="../main.css" rel="stylesheet" type="text/css" media="all" />
-
-	<script type="text/javascript" src="calendarDateInput.js"></script>
-
 	<script language="JavaScript" type="text/javascript">
 		function formSubmit(myform) {
 			// Convert lower-case 'x' to upper-case 'X'
@@ -275,7 +215,7 @@
 
 <body>
 
-<form name="frm_calls" method="POST" action="<?php echo($_SERVER["PHP_SELF"]); ?>">
+<form name="frm_calls" method="POST" ">
 	<fieldset>
 		<!--[if !IE]>-->
 			<legend>Breakdown of Calls by Extension</legend>
@@ -297,7 +237,7 @@
 					<label>Start Date:</label>
 				</td>
 				<td>
-					<script>DateInput('startDate', true, 'YYYY-MM-DD', '<?php echo($startDate); ?>')</script>
+					<input type="text" name="startDate" size="20" maxlength="19" value="<?php echo($startDate); ?>" />
 				</td>
 				<td>
 					<label>External # Length:</label>
@@ -337,7 +277,7 @@
 					<label>End Date:</label>
 				</td>
 				<td>
-					<script>DateInput('endDate', true, 'YYYY-MM-DD', '<?php echo($endDate); ?>')</script>
+					<input type="text" name="endDate" size="20" maxlength="19" value="<?php echo($endDate); ?>" />
 				</td>
 				<td>
 					<label>Extension Format:</label>
@@ -371,7 +311,7 @@
 
 	// Create the requested graph
 	echo("<p id='center'>");
-		echo("<img src='ext_graph.php?startDate=" . $startDate . "&endDate=" . $endDate . "&width=" . $extbreakdown_settings["graph_width"] . "' />");
+		echo("<img src='?display=extbreakdown&quietmode=1&ext_graph=1&startDate=" . $startDate . "&endDate=" . $endDate . "&width=" . $extbreakdown_settings["graph_width"] . "' />");
 	echo("</p>");
 ?>
 
