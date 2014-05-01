@@ -154,6 +154,30 @@
 			'name' => $data["name"]." (iax)",
 		);
 	}
+
+	// query to get all custom trunks
+	$SQLTrunks = "SELECT
+					`name`,`channelid`
+				FROM
+					trunks
+				WHERE
+					disabled LIKE 'off' AND
+					(
+						tech LIKE 'custom'
+					)
+				ORDER BY
+					trunkid";
+	$SQLTrunksRS = mysql_query($SQLTrunks)
+		or die("Failed to query the \"" . $dbConf["database"] . "\" database.");
+
+	// Add custom trunks to $trunks array
+	while ($data = mysql_fetch_array($SQLTrunksRS)) {
+		$trunks[] = array(
+			'channelid' => "custom/".$data["channelid"]."-",
+			'name' => $data["name"]." (custom)",
+		);
+	}
+
 	// query to get all DAHDI trunks 
 	$SQLTrunks = "SELECT
 					`name`,`channelid`
@@ -192,6 +216,10 @@
 	$trunks[] = array(
 			'channelid' => "DAHDI/",
 			'name' => "All DAHDI Trunks",
+		);
+	$trunks[] = array(
+			'channelid' => "custom/",
+			'name' => "All custom Trunks",
 		);
 	// support for ZAP removed 2014-01-25
 	//	$trunks[] = "ZAP/";
