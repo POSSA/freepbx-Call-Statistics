@@ -100,11 +100,11 @@
 	$calls = array();
 
 	// Connect to the MySQL database
-	$link = mysql_connect($dbConf["host"], $dbConf["user"], $dbConf["pass"])
+	$link = mysqli_connect($dbConf["host"], $dbConf["user"], $dbConf["pass"])
 		or die("Failed to connect to MySQL server at: " . $dbConf["host"]);
 
 	// Select the 'asterisk' database and obtain a list of trunks
-	mysql_select_db($dbConf["database"], $link)
+	mysqli_select_db($link, $dbConf["database"])
 		or die("Failed to select database: " . $dbConf["database"]);
 
 	// query to get all SIP trunks
@@ -119,14 +119,14 @@
 					)
 				ORDER BY
 					trunkid";
-	$SQLTrunksRS = mysql_query($SQLTrunks)
+	$SQLTrunksRS = mysqli_query($link, $SQLTrunks)
 		or die("Failed to query the \"" . $dbConf["database"] . "\" database.");
 
 	// Populate the $trunks array
 	$trunks[0] = "";  // first entry is blank
 
 	// Add SIP trunks to $trunks array
-	while ($data = mysql_fetch_array($SQLTrunksRS)) {
+	while ($data = mysqli_fetch_array($SQLTrunksRS)) {
 		$trunks[] = array(
 			'channelid' => "SIP/".$data["channelid"]."-",
 			'name' => $data["name"]." (sip)",
@@ -144,11 +144,11 @@
 					)
 				ORDER BY
 					trunkid";
-	$SQLTrunksRS = mysql_query($SQLTrunks)
+	$SQLTrunksRS = mysqli_query($link, $SQLTrunks)
 		or die("Failed to query the \"" . $dbConf["database"] . "\" database.");
 
 	// Add IAX2 trunks to $trunks array
-	while ($data = mysql_fetch_array($SQLTrunksRS)) {
+	while ($data = mysqli_fetch_array($SQLTrunksRS)) {
 		$trunks[] = array(
 			'channelid' => "IAX2/".$data["channelid"]."-",
 			'name' => $data["name"]." (iax)",
@@ -167,11 +167,11 @@
 					)
 				ORDER BY
 					trunkid";
-	$SQLTrunksRS = mysql_query($SQLTrunks)
+	$SQLTrunksRS = mysqli_query($link, $SQLTrunks)
 		or die("Failed to query the \"" . $dbConf["database"] . "\" database.");
 
 	// Add custom trunks to $trunks array
-	while ($data = mysql_fetch_array($SQLTrunksRS)) {
+	while ($data = mysqli_fetch_array($SQLTrunksRS)) {
 		$trunks[] = array(
 			'channelid' => "custom/".$data["channelid"]."-",
 			'name' => $data["name"]." (custom)",
@@ -190,11 +190,11 @@
 					
 				ORDER BY
 					trunkid";
-	$SQLTrunksRS = mysql_query($SQLTrunks)
+	$SQLTrunksRS = mysqli_query($link, $SQLTrunks)
 		or die("Failed to query the \"" . $dbConf["database"] . "\" database.");
 
 	// Add DAHDI trunks to $trunks array
-	while ($data = mysql_fetch_array($SQLTrunksRS)) {
+	while ($data = mysqli_fetch_array($SQLTrunksRS)) {
 		$trunks[] = array(
 			'channelid' => $data["channelid"],   // treat this one differently until we find out if channel or group
 			'name' => $data["name"]." (dahdi)",
@@ -263,7 +263,7 @@
 	}
 
 	// Select the database
-	mysql_select_db($dbConf["cdrdbase"], $link)
+	mysqli_select_db($link, $dbConf["cdrdbase"])
 		or die("Failed to select database: " . $dbConf["cdrdbase"]);
 
 	// Define the SQL Query
@@ -305,11 +305,11 @@
 					}
 	$SQLCalls .= " ORDER BY
 	               	stime ASC";
-	$SQLCallsRS = mysql_query($SQLCalls)
+	$SQLCallsRS = mysqli_query($link, $SQLCalls)
 		or die("Failed to query the \"" . $dbConf["cdrdbase"] . "\" database.");
 
 	// Populate the $calls array
-	while ($data = mysql_fetch_array($SQLCallsRS)) {
+	while ($data = mysqli_fetch_array($SQLCallsRS)) {
 		if ( (strlen($data["src"]) >= $concurrentcalls_settings["min_num_length"]) || (is_numeric($data["dst"])) ) {
 			$calls[$data["stime"]][] = array(
 											"load"			=>	1,
@@ -342,7 +342,7 @@
 	}
 
 	// Close the link to MySQL
-	mysql_close($link);
+	mysqli_close($link);
 
 	// Sort the $calls array by its keys.  This is the same as sorting all calls by their epoch timestamps,
 	// since the keys of the $calls array are the start and stop times of each call in epoch time.
